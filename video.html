@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://kit.fontawesome.com/0356243f68.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+
+<style>
+    #reco
+    {
+        display: block;
+    }
+</style>
+<body>
+    <div id="navbar">
+        <div class="nlogo"><i class="fas fa-grip-lines fa-2x"></i></div>
+        <div class="ylogo"><i class="fab fa-youtube fa-2x" id="ylog"><span>YouTube<sup>IN</sup></span></i></div>
+        <div id="logo">
+            <input type="text" class="vid" id="video" placeholder="Search">
+            <button class="search" onclick="showData()">Search</button>
+        </div>
+    </div>
+    <div id="main">
+        <div id="video_details"></div>
+        <div id="reco"></div>
+    </div>
+    
+</body>
+</html>
+<script>
+
+    let rec_div = document.getElementById("reco");
+
+    var {videoId} = JSON.parse(localStorage.getItem("clicked_video"));
+    let {title} = JSON.parse(localStorage.getItem("clicked_video"));
+    let {desc} =  JSON.parse(localStorage.getItem("clicked_video"));
+   
+
+    let video_div = document.getElementById("video_details");
+
+    let iframe = document.createElement('iframe');
+
+    var reco_div = document.getElementById("reco");
+
+
+    iframe.src = `https://www.youtube.com/embed/${videoId}`;
+    iframe.width = "100%"
+    iframe.height = "100%";
+
+    let ti = document.createElement("h3");
+    ti.innerHTML =  `https://www.youtube.com/embed/${title}`;
+   
+
+    iframe.setAttribute("allowfullscreen", true);
+
+    video_div.append(iframe,ti,desc)
+    // rec_div.append(iframe)
+
+    async function getrecovideos(){
+        try{
+        let video_q = document.getElementById("video").value;
+
+            let response = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&q=${video_q}&key=AIzaSyC1AM4Zi4wUZt_7VKL0OGxufDcTlHwzX3M&maxResults=20&regionCode=IN`)
+
+            let data = await response.json();
+
+            let videos = data.items;
+            showData(data)
+        }
+        catch(e){
+
+        }
+    }
+    getrecovideos()
+
+    function showData(data){
+        data.forEach(function(el){
+            // console.log("el",el)
+            let {id} = el;
+
+            let v_id = el.id.videoId;
+
+            let reco_div = document.getElementById("reco");
+
+        let{ 
+            id:{videoId},
+            } = el;
+
+            console.log("VideoId:",videoId);
+
+            let iframe = document.createElement("iframe");
+            iframe.src = `https://www.youtube.com/embed/${videoId}`;
+
+            iframe.height = "250px";
+            iframe.width = "250px";
+            iframe.setAttribute("allowfullscreen", true)
+            reco_div.append(iframe)
+
+
+        });
+
+    };
+    showData()
+
+</script>
