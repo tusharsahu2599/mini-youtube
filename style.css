@@ -104,8 +104,9 @@ sup{
 }
 
 #video_details{
-    flex : 3;
-    gap: 20px;
+    width: 50%;
+    height : 600px;
+    margin-left : 250px;
 }
 #reco{
     flex: 1;
